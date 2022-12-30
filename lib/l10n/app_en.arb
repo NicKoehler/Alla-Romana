@@ -1,0 +1,48 @@
+{
+  "addPerson": "Add person",
+  "enterName": "Enter name",
+  "enterNameError": "Enter a valid name",
+  "enterCost": "Enter cost",
+  "enterCostError": "Enter a numerical amount",
+  "addPersonDesc": "Add some people to start calculating",
+  "removePersonDescription": "Are you sure you want to remove this person?",
+  "calculate": "Calculate",
+  "close": "Close",
+  "total": "Total",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
+  "pay": "pays",
+  "spent": "spent",
+  "hasToPay": "has to pay",
+  "shouldReceive": "should receive",
+  "solution": "SOLUTION",
+  "enteredCosts": "ENTERED COSTS",
+  "debitors": "DEBITORS",
+  "creditors": "CREDITORS",
+  "to": "{val,plural,other{to}}",
+  "enterNameErrorLength": "{val,plural,other{The name cannot exceed {val} characters}}",
+  "enterCostErrorLength": "{val,plural,other{The cost cannot exceed {val} characters}}",
+  "costPerPerson": "{count,plural,other{Cost per person ({count})}}",
+  "@to": {
+    "placeholders": {
+      "val": {}
+    }
+  },
+  "@enterNameErrorLength": {
+    "placeholders": {
+      "val": {}
+    }
+  },
+    "@enterCostErrorLength": {
+    "placeholders": {
+      "val": {}
+    }
+  },
+  "@costPerPerson": {
+    "placeholders": {
+      "count": {}
+    }
+  }
+}
