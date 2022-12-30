@@ -22,10 +22,12 @@ class SIt extends S {
   String get enterCostError => 'Inserire un importo numerico';
 
   @override
-  String get addPersonDesc => 'Aggiungi delle persone per iniziare a calcolare i costi';
+  String get addPersonDesc =>
+      'Aggiungi delle persone per iniziare a calcolare i costi';
 
   @override
-  String get removePersonDescription => 'Sei sicuro di voler rimuovere questa persona?';
+  String get removePersonDescription =>
+      'Sei sicuro di voler rimuovere questa persona?';
 
   @override
   String get calculate => 'Calcola';
