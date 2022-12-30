@@ -1,6 +1,10 @@
 # <img src="assets/logo.svg" width="30"> Alla Romana
 
-a Flutter app that helps you split the cost with your friends.
+_a Flutter app that helps you divide costs with your friends._
+
+---
+
+**Alla Romana** is an Italian idiomatic expression used when one wants to divide costs equally. see [here](https://it.wikipedia.org/wiki/Alla_romana) for more details.
 
 ## Features
 
