@@ -5,6 +5,11 @@ on:
         branches:
             - main
 
+env:
+    JAVA_VERSION: "12.x"
+    FLUTTER_VERSION: "3.3.10"
+    FLUTTER_CHANNEL: "stable"
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -12,10 +17,11 @@ jobs:
             - uses: actions/checkout@v1
             - uses: actions/setup-java@v1
               with:
-                  java-version: "12.x"
+                  java-version: ${{env.JAVA_VERSION}}
             - uses: subosito/flutter-action@v1
               with:
-                  channel: "beta"
+                  channel: ${{env.FLUTTER_CHANNEL}}
+                  flutter-version: ${{env.FLUTTER_VERSION}}
             - run: flutter pub get
             - run: flutter build apk
             - uses: actions/upload-artifact@v1

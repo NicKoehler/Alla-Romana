@@ -25,8 +25,7 @@ class SEn extends S {
   String get addPersonDesc => 'Add some people to start calculating';
 
   @override
-  String get removePersonDescription =>
-      'Are you sure you want to remove this person?';
+  String get removePersonDescription => 'Are you sure you want to remove this person?';
 
   @override
   String get calculate => 'Calculate';
