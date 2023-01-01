@@ -14,14 +14,15 @@ dependencies:
     flutter_localizations:
         sdk: flutter
 
+    intl: ^0.17.0
     decimal: ^2.3.2
     dynamic_color: ^1.5.4
     awesome_dialog: ^3.0.2
     cupertino_icons: ^1.0.2
     currency_formatter: ^2.0.0
     shared_preferences: ^2.0.15
+    appinio_social_share: ^0.2.0
     flutter_launcher_icons: ^0.11.0
-    intl: ^0.17.0
 
 dev_dependencies:
     flutter_test:

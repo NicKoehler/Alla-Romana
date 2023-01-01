@@ -7,12 +7,15 @@ import 'package:alla_romana/classes/expenses.dart';
 import 'package:alla_romana/components/custom_card.dart';
 import 'package:alla_romana/components/euro_settings.dart';
 import 'package:currency_formatter/currency_formatter.dart';
+import 'package:appinio_social_share/appinio_social_share.dart';
 
 class ResultPage extends StatelessWidget {
   final List<Pair> data;
-  const ResultPage({super.key, required this.data});
-
   static const SizedBox spacer = SizedBox(height: 20);
+  final AppinioSocialShare _appinioSocialShare = AppinioSocialShare();
+  final List<String> _solutionText = [];
+
+  ResultPage({super.key, required this.data});
 
   Widget makeRow(
           String text, Decimal cost, TextStyle? style, BuildContext context) =>
@@ -41,7 +44,7 @@ class ResultPage extends StatelessWidget {
           fontWeight: FontWeight.bold,
         );
 
-    final subtitleStyle = Theme.of(context).textTheme.headline5?.copyWith(
+    final subtitleStyle = Theme.of(context).textTheme.headline5!.copyWith(
           color: titleStyle.color,
           fontWeight: FontWeight.bold,
         );
@@ -66,7 +69,7 @@ class ResultPage extends StatelessWidget {
       ),
     ];
 
-    final costs = makeCustomCard(
+    final listCosts = makeCustomCard(
       S.of(context)!.enteredCosts,
       S.of(context)!.spent,
       subtitleStyle,
@@ -88,7 +91,7 @@ class ResultPage extends StatelessWidget {
       }
     }
 
-    final payers = makeCustomCard(
+    final listPayers = makeCustomCard(
       S.of(context)!.debitors,
       S.of(context)!.hasToPay,
       subtitleStyle,
@@ -96,7 +99,7 @@ class ResultPage extends StatelessWidget {
       context,
     );
 
-    final payed = makeCustomCard(
+    final listPayed = makeCustomCard(
       S.of(context)!.creditors,
       S.of(context)!.shouldReceive,
       subtitleStyle,
@@ -106,28 +109,28 @@ class ResultPage extends StatelessWidget {
 
     final List<Widget> solutionChildren = [];
 
-    Pair pagante = haveToPay.removeFirst();
-    Pair daPagare = toBePayed.removeFirst();
+    Pair payer = haveToPay.removeFirst();
+    Pair payed = toBePayed.removeFirst();
 
     while (true) {
-      if (pagante.cost > daPagare.cost) {
+      if (payer.cost > payed.cost) {
         solutionChildren.add(
-          makeSolutionRow(pagante, daPagare, daPagare.cost, context),
+          makeSolutionRow(payer, payed, payed.cost, context),
         );
-        pagante.cost -= daPagare.cost;
+        payer.cost -= payed.cost;
         if (toBePayed.isEmpty) {
           break;
         }
-        daPagare = toBePayed.removeFirst();
+        payed = toBePayed.removeFirst();
       } else {
         solutionChildren.add(
-          makeSolutionRow(pagante, daPagare, pagante.cost, context),
+          makeSolutionRow(payer, payed, payer.cost, context),
         );
-        daPagare.cost -= pagante.cost;
+        payed.cost -= payer.cost;
         if (haveToPay.isEmpty) {
           break;
         }
-        pagante = haveToPay.removeFirst();
+        payer = haveToPay.removeFirst();
       }
     }
 
@@ -135,27 +138,61 @@ class ResultPage extends StatelessWidget {
       open: true,
       title: S.of(context)!.solution,
       subtitleStyle: subtitleStyle,
-      children: solutionChildren,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...solutionChildren,
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton.small(
+                    heroTag: "share",
+                    child: const Icon(Icons.share_rounded),
+                    onPressed: () => _appinioSocialShare.shareToSystem(
+                      "",
+                      _solutionText.join("\n"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
     );
 
     final List<Widget> results = [
       ...headline,
       solution,
-      costs,
-      payers,
-      payed,
+      listCosts,
+      listPayers,
+      listPayed,
     ];
 
     return results;
   }
 
-  Row makeSolutionRow(
+  Widget makeSolutionRow(
     Pair pagante,
     Pair daPagare,
     Decimal cost,
     BuildContext context,
   ) {
-    return Row(
+    String payText = S.of(context)!.pay;
+    String toText = S.of(context)!.to(
+          "aeiou".contains(
+            daPagare.name.characters.first.toLowerCase(),
+          )
+              ? 1
+              : 0,
+        );
+    _solutionText.add(
+      "• ${pagante.name} $payText $toText ${daPagare.name}",
+    );
+    return Wrap(
       children: [
         const Text("• "),
         Text(
@@ -164,7 +201,7 @@ class ResultPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold),
         ),
-        Text(" ${S.of(context)!.pay} "),
+        Text(" $payText "),
         Text(
           CurrencyFormatter.format(
             cost,
@@ -176,13 +213,7 @@ class ResultPage extends StatelessWidget {
               fontWeight: FontWeight.bold),
         ),
         Text(
-          " ${S.of(context)!.to(
-                "aeiou".contains(
-                  daPagare.name.characters.first.toLowerCase(),
-                )
-                    ? 1
-                    : 0,
-              )} ",
+          " $toText ",
         ),
         Text(
           daPagare.name,
@@ -194,34 +225,41 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  CustomCard makeCustomCard(String title, String middleString,
-      TextStyle? subtitleStyle, Iterable iterable, BuildContext context) {
+  CustomCard makeCustomCard(
+    String title,
+    String middleString,
+    TextStyle? subtitleStyle,
+    Iterable iterable,
+    BuildContext context,
+  ) {
     return CustomCard(
       title: title,
       subtitleStyle: subtitleStyle,
       children: iterable
-          .map((person) => Row(
-                children: [
-                  const Text("• "),
-                  Text(
-                    person.name,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold),
+          .map(
+            (person) => Row(
+              children: [
+                const Text("• "),
+                Text(
+                  person.name,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(" $middleString "),
+                Text(
+                  CurrencyFormatter.format(
+                    person.cost,
+                    euroSettings,
+                    enforceDecimals: true,
                   ),
-                  Text(" $middleString "),
-                  Text(
-                    CurrencyFormatter.format(
-                      person.cost,
-                      euroSettings,
-                      enforceDecimals: true,
-                    ),
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold),
-                  )
-                ],
-              ))
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          )
           .toList(),
     );
   }
@@ -236,6 +274,7 @@ class ResultPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: "close",
         onPressed: () => Navigator.of(context).pop(),
         label: Text(S.of(context)!.close),
         icon: const Icon(Icons.close_rounded),

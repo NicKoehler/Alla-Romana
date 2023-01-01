@@ -5,6 +5,7 @@ class CustomCard extends StatelessWidget {
   final String title;
   final TextStyle? subtitleStyle;
   final List<Widget> children;
+  final Widget? trailing;
   final bool? open;
 
   const CustomCard(
@@ -12,6 +13,7 @@ class CustomCard extends StatelessWidget {
       required this.title,
       required this.subtitleStyle,
       required this.children,
+      this.trailing,
       this.open})
       : super(key: key);
 
@@ -21,6 +23,7 @@ class CustomCard extends StatelessWidget {
       color: Theme.of(context).scaffoldBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: RoundedExpansionTile(
+          trailing: trailing,
           expanded: open,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
