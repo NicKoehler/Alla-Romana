@@ -182,6 +182,11 @@ class ResultPage extends StatelessWidget {
     BuildContext context,
   ) {
     String payText = S.of(context)!.pay;
+    String costToPay = CurrencyFormatter.format(
+      cost,
+      euroSettings,
+      enforceDecimals: true,
+    );
     String toText = S.of(context)!.to(
           "aeiou".contains(
             daPagare.name.characters.first.toLowerCase(),
@@ -190,7 +195,7 @@ class ResultPage extends StatelessWidget {
               : 0,
         );
     _solutionText.add(
-      "• ${pagante.name} $payText $toText ${daPagare.name}",
+      "• ${pagante.name} $payText $costToPay $toText ${daPagare.name}",
     );
     return Wrap(
       children: [
@@ -203,11 +208,7 @@ class ResultPage extends StatelessWidget {
         ),
         Text(" $payText "),
         Text(
-          CurrencyFormatter.format(
-            cost,
-            euroSettings,
-            enforceDecimals: true,
-          ),
+          costToPay,
           style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold),
